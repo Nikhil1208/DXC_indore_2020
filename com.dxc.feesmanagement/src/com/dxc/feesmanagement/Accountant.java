@@ -2,20 +2,17 @@ package com.dxc.feesmanagement;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Accountant {
 	
-	public void addStu(BufferedReader buff) {
 
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/contactdb", "Nikhil", "@Nikhil@1208");
 
-			PreparedStatement stmtInsert = con.prepareStatement("insert into Accountant values(?,?,?,?,?,?,?,?,?,?,?)");
+	public void addStu(BufferedReader buff, Connection mConnectionObject) throws Exception{
+
+			PreparedStatement stmtInsert = mConnectionObject.prepareStatement("insert into Accountant values(?,?,?,?,?,?,?,?,?,?,?)");
 			
 			System.out.println("Enter your Name");
 			String name = buff.readLine();
@@ -52,29 +49,20 @@ public class Accountant {
 			stmtInsert.setString(10, country);
 			stmtInsert.setString(11, phone);
 			System.out.println(stmtInsert.executeUpdate() + " No of Records Inserted");
-		}
-		catch(Exception e) {
-			System.out.println(e);
-		}
-		
+			
 	}
 
 
-	public void viewStu(BufferedReader buff) {
-		try {
-			 Class.forName("com.mysql.jdbc.Driver");
-			Connection con=DriverManager.getConnection("jdbc:mysql://localhost:3306/contactdb", "Nikhil", "@Nikhil@1208");
-			Statement stmt = con.createStatement(); 
+	public void viewStu(BufferedReader buff, Connection mConnectionObject) throws Exception {
+		
+			Statement stmt = mConnectionObject.createStatement(); 
 			ResultSet rs = stmt.executeQuery("select * from Accountant");
 			while (rs.next())
 				System.out.println(rs.getString(1) + ", " + rs.getString(2) + ", " + rs.getString(3) + ", " + rs.getInt(4)+
 						","+rs.getString(5)+ ", " + rs.getString(6)+ ", " + rs.getString(7)+ ", " + rs.getString(8)
 						+ ", " + rs.getString(9)+ ", " + rs.getString(10)+ ", " + rs.getString(11));
-		}
-		catch(Exception e) {
-			System.out.println(e);
-		}
 		
+		 
 	}
 
 	

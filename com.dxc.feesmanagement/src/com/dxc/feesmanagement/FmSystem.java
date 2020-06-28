@@ -2,6 +2,8 @@ package com.dxc.feesmanagement;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 class MyUserClass<T> { 
 	T obj;
@@ -15,8 +17,19 @@ class MyUserClass<T> {
 	}
 }
 
-
+ 
 public class FmSystem {
+    Connection mConnectionObject;
+	public Connection getInstance() throws Exception {
+		if(mConnectionObject==null) {
+			Class.forName("com.mysql.jdbc.Driver");
+			mConnectionObject=DriverManager.getConnection("jdbc:mysql://localhost:3306/contactdb", "Nikhil", "@Nikhil@1208");
+			return mConnectionObject;
+		}
+			else
+				return mConnectionObject;
+		
+	}
 	InputStreamReader isr = null;
 	BufferedReader buff = null;
 	Admin mAdmin= null;
@@ -25,14 +38,14 @@ public class FmSystem {
 	
 	public static void main(String[] args) throws Exception{
 		
-		FmSystem mObject=new FmSystem();
+		FmSystem mFMSObject=new FmSystem();
 		
-		mObject.isr = new InputStreamReader(System.in);
-		mObject.buff = new BufferedReader(mObject.isr);
+		mFMSObject.isr = new InputStreamReader(System.in);
+		mFMSObject.buff = new BufferedReader(mFMSObject.isr);
 		
 			System.out.println("Welcome to Student fees Management System \n\n\n");
 			System.out.println("SELECT  YOUR SYSTEM\n1. Admin\n2. Accountant");
-			String mUserChoice = mObject.buff.readLine();
+			String mUserChoice = mFMSObject.buff.readLine();
 			
 			String mOperationChoice, continueChoice;
 			boolean choice = true;
@@ -41,23 +54,23 @@ public class FmSystem {
 			case 1:
 				MyUserClass<Admin> obj = new MyUserClass<Admin>();
 				obj.create(new Admin());
-				mObject.mAdmin = obj.getInstance();
+				mFMSObject.mAdmin = obj.getInstance();
 				do {
 					
 					System.out.println("SELECT  YOUR  Operation\n1. Add Acc\n2. View Accountant");
-					mOperationChoice = mObject.buff.readLine();
+					mOperationChoice = mFMSObject.buff.readLine();
 					switch (Integer.parseInt(mOperationChoice)) {
 					case 1:
-						mObject.mAdmin.addAcc(mObject.buff);
+						mFMSObject.mAdmin.addAcc(mFMSObject.buff, mFMSObject.getInstance());
 						break;
 					case 2:
-						mObject.mAdmin.viewAcc(mObject.buff);
+						mFMSObject.mAdmin.viewAcc(mFMSObject.buff,  mFMSObject.getInstance());
 						break;
 					default:
 						System.out.println("No Operation Choice Selected");
 					}
 					System.out.println("Do you Want to Continue\nYes\nNo");
-					continueChoice = mObject.buff.readLine();
+					continueChoice = mFMSObject.buff.readLine();
 					if (continueChoice.equalsIgnoreCase("No"))
 						choice = false;
 				}while(choice);
@@ -65,29 +78,29 @@ public class FmSystem {
 		  case 2:
 				MyUserClass<Accountant> obj1 = new MyUserClass<Accountant>();
 				obj1.create(new Accountant());
-				mObject.mAccountant = obj1.getInstance();
+				mFMSObject.mAccountant = obj1.getInstance();
 				do {
 					System.out.println("SELECT  YOUR  Operation\n1. Add Student\n2. View Student");
-					mOperationChoice = mObject.buff.readLine();
+					mOperationChoice = mFMSObject.buff.readLine();
 					switch (Integer.parseInt(mOperationChoice)) {
 					case 1:
-						mObject.mAccountant.addStu(mObject.buff);
+						mFMSObject.mAccountant.addStu(mFMSObject.buff, mFMSObject.getInstance());
 						break;
 					case 2:
-						mObject.mAccountant.viewStu(mObject.buff);
+						mFMSObject.mAccountant.viewStu(mFMSObject.buff, mFMSObject.getInstance());
 						break;
 						default:
 						    System.out.println("No Operation Choice Selected");
 					}
 					System.out.println("Do you Want to Continue\nYes\nNo");
-					continueChoice = mObject.buff.readLine();
+					continueChoice = mFMSObject.buff.readLine();
 					if (continueChoice.equalsIgnoreCase("No"))
 						choice = false;
 				}while(choice);
 				break;
 		  default: System.out.println("No Choice Done");
 	   }
-		
+			
 	}
-
+  
 }
